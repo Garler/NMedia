@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/common_padding"
+    tools:context=".MainActivity">
+
+    <ImageView
+        android:id="@+id/avatar"
+        android:layout_width="@dimen/avatar_size"
+        android:layout_height="@dimen/avatar_size"
+        android:contentDescription="@string/post_author_avatar"
+        app:layout_constraintBottom_toBottomOf="@id/barrierTop"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:srcCompat="@sample/posts.json/data/authorAvatar" />
+
+    <TextView
+        android:id="@+id/author"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/common_padding"
+        android:ellipsize="end"
+        android:singleLine="true"
+        app:layout_constraintBottom_toTopOf="@id/published"
+        app:layout_constraintEnd_toStartOf="@id/menu"
+        app:layout_constraintStart_toEndOf="@id/avatar"
+        app:layout_constraintTop_toTopOf="@id/avatar"
+        app:layout_constraintVertical_chainStyle="packed"
+        tools:text="@sample/posts.json/data/author" />
+
+    <TextView
+        android:id="@+id/published"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/common_padding"
+        app:layout_constraintBottom_toBottomOf="@id/avatar"
+        app:layout_constraintStart_toEndOf="@id/avatar"
+        app:layout_constraintTop_toBottomOf="@id/author"
+        tools:text="@sample/posts.json/data/published" />
+
+    <ImageButton
+        android:id="@+id/menu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:contentDescription="@string/post_menu"
+        android:src="@drawable/ic_baseline_more_vert_24"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrierTop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="published, menu, avatar" />
+
+    <TextView
+        android:id="@+id/content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/common_padding"
+        android:autoLink="web"
+        app:layout_constraintTop_toBottomOf="@id/barrierTop"
+        tools:text="@sample/posts.json/data/content" />
+
+    <ImageButton
+        android:id="@+id/icLikes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/common_padding"
+        android:background="@android:color/transparent"
+        android:contentDescription="@string/likes"
+        android:src="@drawable/ic_baseline_favorite_border_24"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/content" />
+
+    <TextView
+        android:id="@+id/likes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/mini_padding"
+        app:layout_constraintBottom_toBottomOf="@id/icLikes"
+        app:layout_constraintStart_toEndOf="@id/icLikes"
+        app:layout_constraintTop_toTopOf="@id/icLikes"
+        tools:text="@sample/posts.json/data/likes" />
+
+    <ImageButton
+        android:id="@+id/icReposts"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/common_padding"
+        android:background="@android:color/transparent"
+        android:contentDescription="@string/reposts"
+        android:src="@drawable/ic_baseline_share_24"
+        app:layout_constraintStart_toEndOf="@id/likes"
+        app:layout_constraintTop_toBottomOf="@id/content" />
+
+    <TextView
+        android:id="@+id/reposts"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/mini_padding"
+        app:layout_constraintBottom_toBottomOf="@id/icReposts"
+        app:layout_constraintStart_toEndOf="@id/icReposts"
+        app:layout_constraintTop_toTopOf="@id/icReposts"
+        tools:text="@sample/posts.json/data/reposts" />
+
+    <ImageButton
+        android:id="@+id/icViews"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/common_padding"
+        android:layout_marginEnd="@dimen/mini_padding"
+        android:background="@android:color/transparent"
+        android:contentDescription="@string/views"
+        android:src="@drawable/ic_baseline_remove_red_eye_24"
+        app:layout_constraintEnd_toStartOf="@id/views"
+        app:layout_constraintTop_toBottomOf="@id/content" />
+
+    <TextView
+        android:id="@+id/views"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@id/icViews"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/icViews"
+        tools:text="@sample/posts.json/data/views" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
