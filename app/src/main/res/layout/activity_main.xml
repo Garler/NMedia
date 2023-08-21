@@ -21,7 +21,17 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"
-        app:constraint_referenced_ids="icEdit, icCancel, titleEdit, textEdit" />
+        app:constraint_referenced_ids="icEdit, icCancel, titleEdit, textEdit, background" />
+
+    <View
+        android:id="@+id/background"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/design_default_color_background"
+        app:layout_constraintBottom_toTopOf="@+id/toolsTop"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/icEdit"/>
 
     <ImageView
         android:id="@+id/icEdit"
@@ -53,6 +63,7 @@
         app:layout_constraintBottom_toBottomOf="@id/icEdit"
         app:layout_constraintEnd_toStartOf="@id/icCancel"
         app:layout_constraintStart_toEndOf="@id/icEdit"
+        app:layout_constraintTop_toBottomOf="@id/titleEdit"
         app:layout_constraintVertical_chainStyle="packed"
         tools:text="@sample/posts.json/data/content" />
 
