@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="@dimen/common_padding"
-    tools:context=".MainActivity">
+    tools:context=".activity.MainActivity">
 
     <ImageView
         android:id="@+id/avatar"
@@ -67,6 +67,18 @@
         app:layout_constraintTop_toBottomOf="@id/barrierTop"
         tools:text="@sample/posts.json/data/content" />
 
+    <ImageButton
+        android:id="@+id/playButton"
+        android:layout_width="wrap_content"
+        android:layout_height="220dp"
+        android:layout_margin="@dimen/common_padding"
+        android:background="@drawable/preview"
+        android:contentDescription="@string/play_button"
+        android:src="@drawable/ic_play_media_48"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/content"
+        tools:visibility="visible" />
+
     <com.google.android.material.button.MaterialButton
         android:id="@+id/icLikes"
         style="@style/Widget.AppTheme.LikeButton"
@@ -76,7 +88,7 @@
         android:contentDescription="@string/likes"
         app:icon="@drawable/ic_like_selector"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/content" />
+        app:layout_constraintTop_toBottomOf="@id/playButton" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/icReposts"
@@ -87,7 +99,7 @@
         android:contentDescription="@string/reposts"
         app:icon="@drawable/ic_baseline_share_24"
         app:layout_constraintStart_toEndOf="@id/icLikes"
-        app:layout_constraintTop_toBottomOf="@id/content" />
+        app:layout_constraintTop_toBottomOf="@id/playButton" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/icViews"
@@ -97,6 +109,6 @@
         android:contentDescription="@string/views"
         app:icon="@drawable/ic_baseline_remove_red_eye_24"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/content" />
+        app:layout_constraintTop_toBottomOf="@id/playButton" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -13,4 +13,8 @@
     <string name="edit_mode">Edit mode</string>
     <string name="cancel_editing">Cancel editing</string>
     <string name="edit_post">Edit Post</string>
+    <string name="chooser_share_post">Share post</string>
+    <string name="add_post">Add post</string>
+    <string name="play_button">Play button</string>
+    <string name="no_app">No app</string>
 </resources>

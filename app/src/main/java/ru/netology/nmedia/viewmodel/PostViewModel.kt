@@ -14,7 +14,8 @@ private val empty = Post(
     published = "",
     likes = 0,
     reposts = 0,
-    views = 0
+    views = 0,
+    video = ""
 )
 
 class PostViewModel : ViewModel() {
@@ -40,7 +41,4 @@ class PostViewModel : ViewModel() {
     fun like(id: Int) = repository.like(id)
     fun repost(id: Int) = repository.repost(id)
     fun removeById(id: Int) = repository.removeById(id)
-    fun resetEditing() {
-        edited.value = empty
-    }
 }
