@@ -31,10 +31,12 @@
         </activity>
         <activity
             android:name=".activity.EditPostActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".activity.NewPostActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
     </application>
     <queries>
         <intent>
