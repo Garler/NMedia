@@ -50,6 +50,7 @@ class PostRepositoryInFileImpl(
             )
         }
         data.value = posts
+        sync()
     }
 
     override fun repost(id: Int) {
@@ -57,11 +58,13 @@ class PostRepositoryInFileImpl(
             if (it.id != id) it else it.copy(reposts = it.reposts + 1)
         }
         data.value = posts
+        sync()
     }
 
     override fun removeById(id: Int) {
         posts = posts.filter { it.id != id }
         data.value = posts
+        sync()
     }
 
     override fun save(post: Post) {
@@ -80,6 +83,7 @@ class PostRepositoryInFileImpl(
             if (it.id != post.id) it else it.copy(content = post.content)
         }
         data.value = posts
+        sync()
     }
 
     private fun sync() {
