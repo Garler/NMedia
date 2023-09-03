@@ -77,6 +77,7 @@ class PostRepositoryInFileImpl(
                 )
             ) + posts
             data.value = posts
+            sync()
             return
         }
         posts = posts.map {
