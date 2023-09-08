@@ -2,32 +2,31 @@ package ru.netology.nmedia.activity
 
 import android.content.Intent
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
-import androidx.activity.result.launch
-import androidx.activity.viewModels
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import ru.netology.nmedia.R
+import ru.netology.nmedia.activity.EditPostFragment.Companion.text
+import ru.netology.nmedia.activity.PostFragment.Companion.idArg
 import ru.netology.nmedia.adapter.OnInteractionListener
 import ru.netology.nmedia.adapter.PostsAdapter
-import ru.netology.nmedia.databinding.ActivityMainBinding
+import ru.netology.nmedia.databinding.FragmentFeedBinding
 import ru.netology.nmedia.dto.Post
-import ru.netology.nmedia.util.AndroidUtils
-import ru.netology.nmedia.util.AndroidUtils.focusAndShowKeyboard
 import ru.netology.nmedia.viewmodel.PostViewModel
 
-class MainActivity : AppCompatActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        val binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-        val viewModel: PostViewModel by viewModels()
-
-        val editPostLauncher = registerForActivityResult(EditPostResultContract()) { result ->
-            result ?.let { viewModel.changeContentAndSave(result) } ?: viewModel.clearEdit()
-        }
+class FeedFragment : Fragment() {
+    val viewModel: PostViewModel by activityViewModels()
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        val binding = FragmentFeedBinding.inflate(layoutInflater)
 
         val adapter = PostsAdapter(object : OnInteractionListener {
             override fun onLike(post: Post) {
@@ -53,36 +52,46 @@ class MainActivity : AppCompatActivity() {
 
             override fun onEdit(post: Post) {
                 viewModel.edit(post)
-                editPostLauncher.launch(post)
+                findNavController().navigate(
+                    R.id.action_feedFragment_to_editPostFragment,
+                    Bundle().also { it.text = post.content }
+                )
             }
 
             override fun onVideo(post: Post) {
                 val webpage: Uri = Uri.parse(post.video)
                 val intent = Intent(Intent.ACTION_VIEW, webpage)
-                if (intent.resolveActivity(packageManager) != null) {
+                if (context?.let { intent.resolveActivity(it.packageManager) } != null) {
                     startActivity(intent)
                 } else {
                     Toast.makeText(
-                        this@MainActivity,
+                        this@FeedFragment.context,
                         R.string.no_app,
                         Toast.LENGTH_LONG
                     ).show()
                     return
                 }
             }
+
+            override fun onCardPost(post: Post) {
+                findNavController().navigate(
+                    R.id.action_feedFragment_to_postFragment,
+                    Bundle().also { it.idArg = post.id }
+                )
+            }
         })
         binding.list.adapter = adapter
-        viewModel.data.observe(this) { posts ->
-            adapter.submitList(posts)
+        viewModel.data.observe(viewLifecycleOwner) { posts ->
+            val newPost = posts.size > adapter.currentList.size
+            adapter.submitList(posts) {
+                if (newPost) {
+                    binding.list.smoothScrollToPosition(0)
+                }
+            }
         }
-
-        val newPostLauncher = registerForActivityResult(NewPostResultContract()) { result ->
-            result ?: return@registerForActivityResult
-            viewModel.changeContentAndSave(result)
-        }
-
         binding.fab.setOnClickListener {
-            newPostLauncher.launch()
+            findNavController().navigate(R.id.action_feedFragment_to_newPostFragment)
         }
+        return binding.root
     }
 }
