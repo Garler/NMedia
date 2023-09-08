@@ -41,11 +41,13 @@ class PostFragment : Fragment() {
                     }
 
                     override fun onShare(post: Post) {
+                        viewModel.repost(post.id)
                         val intent = Intent().apply {
                             action = Intent.ACTION_SEND
                             putExtra(Intent.EXTRA_TEXT, post.content)
                         }
-                        val shareIntent = Intent.createChooser(intent, getString(R.string.chooser_share_post))
+                        val shareIntent =
+                            Intent.createChooser(intent, getString(R.string.chooser_share_post))
                         startActivity(shareIntent)
                     }
 
@@ -57,7 +59,7 @@ class PostFragment : Fragment() {
                     override fun onEdit(post: Post) {
                         viewModel.edit(post)
                         findNavController().navigate(
-                            R.id.action_feedFragment_to_editPostFragment,
+                            R.id.action_postFragment_to_editPostFragment,
                             Bundle().also { it.text = post.content }
                         )
                     }
