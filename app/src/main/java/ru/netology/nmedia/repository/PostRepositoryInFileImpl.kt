@@ -14,7 +14,7 @@ class PostRepositoryInFileImpl(
     private val type = TypeToken.getParameterized(List::class.java, Post::class.java).type
     private val postFile = "posts.json"
     private val nextIdFile = "next_id.json"
-    private var nextId = 1
+    private var nextId = 1L
     private var posts = emptyList<Post>()
     private val data = MutableLiveData(posts)
 
@@ -33,7 +33,7 @@ class PostRepositoryInFileImpl(
         val nextIdFile = context.filesDir.resolve(nextIdFile)
         nextId = if (nextIdFile.exists()) {
             nextIdFile.reader().buffered().use {
-                gson.fromJson(it, Int::class.java)
+                gson.fromJson(it, Long::class.java)
             }
         } else {
             nextId
@@ -42,7 +42,7 @@ class PostRepositoryInFileImpl(
 
     override fun getAll(): LiveData<List<Post>> = data
 
-    override fun like(id: Int) {
+    override fun like(id: Long) {
         posts = posts.map {
             if (it.id != id) it else it.copy(
                 likedByMe = !it.likedByMe,
@@ -53,7 +53,7 @@ class PostRepositoryInFileImpl(
         sync()
     }
 
-    override fun repost(id: Int) {
+    override fun repost(id: Long) {
         posts = posts.map {
             if (it.id != id) it else it.copy(reposts = it.reposts + 1)
         }
@@ -61,14 +61,14 @@ class PostRepositoryInFileImpl(
         sync()
     }
 
-    override fun removeById(id: Int) {
+    override fun removeById(id: Long) {
         posts = posts.filter { it.id != id }
         data.value = posts
         sync()
     }
 
     override fun save(post: Post) {
-        if (post.id == 0) {
+        if (post.id == 0L) {
             posts = listOf(
                 post.copy(
                     id = nextId++,

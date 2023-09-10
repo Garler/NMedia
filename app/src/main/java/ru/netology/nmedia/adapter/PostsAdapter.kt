@@ -18,6 +18,7 @@ interface OnInteractionListener {
     fun onRemove(post: Post)
     fun onEdit(post: Post)
     fun onVideo(post: Post)
+    fun onCardPost(post: Post)
 }
 
 class PostsAdapter(
@@ -56,6 +57,9 @@ class PostViewHolder(
             playButton.visibility = if (post.video.isNotEmpty()) View.VISIBLE else View.GONE
             playButton.setOnClickListener {
                 onInteractionListener.onVideo(post)
+            }
+            binding.cardPost.setOnClickListener {
+                onInteractionListener.onCardPost(post)
             }
             menu.setOnClickListener {
                 PopupMenu(it.context, it).apply {
