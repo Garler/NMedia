@@ -17,4 +17,9 @@
     <string name="add_post">Add post</string>
     <string name="play_button">Play button</string>
     <string name="no_app">No app</string>
+    <string name="channel_remote_name">Server notifications</string>
+    <string name="channel_remote_description">Notifications from remote server</string>
+    <string name="notification_user_liked">User %1$s liked %2$s\\\'s post</string>
+    <string name="notification_new_post">%1$s posted a new post:\\n %2$s</string>
+    <string name="google_play_unavailable">Google Api Unavailable</string>
 </resources>
