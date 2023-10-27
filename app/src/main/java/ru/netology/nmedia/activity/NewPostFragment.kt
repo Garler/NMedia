@@ -16,6 +16,7 @@ class NewPostFragment : Fragment() {
     companion object {
         var Bundle.text: String? by StringArg
     }
+
     private val viewModel: PostViewModel by activityViewModels()
 
     override fun onCreateView(
@@ -36,6 +37,9 @@ class NewPostFragment : Fragment() {
                 val content = binding.edit.text.toString()
                 viewModel.changeContentAndSave(content)
             }
+
+        }
+        viewModel.postCreated.observe(viewLifecycleOwner) {
             findNavController().navigateUp()
         }
         return binding.root
