@@ -1,11 +1,10 @@
 package ru.netology.nmedia.adapter
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import ru.netology.nmedia.R
 import ru.netology.nmedia.databinding.CardPostBinding
@@ -46,15 +45,15 @@ class PostViewHolder(
             content.text = post.content
             icLikes.text = numberFormat(post.likes)
             icLikes.isChecked = post.likedByMe
-            icReposts.text = numberFormat(post.reposts)
-            icViews.text = numberFormat(post.views)
+//            icReposts.text = numberFormat(post.reposts)
+//            icViews.text = numberFormat(post.views)
             icLikes.setOnClickListener {
                 onInteractionListener.onLike(post)
             }
             icReposts.setOnClickListener {
                 onInteractionListener.onShare(post)
             }
-            playButton.visibility = if (post.video.isNotEmpty()) View.VISIBLE else View.GONE
+//            playButton.visibility = if (post.video.isNotEmpty()) View.VISIBLE else View.GONE
             playButton.setOnClickListener {
                 onInteractionListener.onVideo(post)
             }
