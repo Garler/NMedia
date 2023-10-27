@@ -69,10 +69,13 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun like(id: Long) {
+    fun like(id: Long, likedByMe: Boolean) {
         thread {
-            repository.like(id)
-            loadPosts()
+            val refreshPost = repository.like(id, likedByMe)
+            val refreshPosts = _data.value?.posts?.map {
+                if (it.id == id) refreshPost else it
+            } ?: emptyList()
+            _data.postValue(FeedModelState(posts = refreshPosts, empty = refreshPosts.isEmpty()))
         }
     }
 
