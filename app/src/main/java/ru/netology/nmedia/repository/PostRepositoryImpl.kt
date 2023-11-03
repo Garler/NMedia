@@ -84,13 +84,27 @@ class PostRepositoryImpl : PostRepository {
         TODO()
     }
 
-    override fun removeByIdAsync(id: Long, callback: PostRepository.RepositoryCallback<Post>) {
+    override fun removeByIdAsync(id: Long, callback: PostRepository.RepositoryCallback<List<Post>>) {
         val request: Request = Request.Builder()
             .delete()
             .url("${BASE_URL}/api/slow/posts/$id")
             .build()
 
-        enqueuePostRepository(request, Post::class.java, callback)
+        client.newCall(request)
+            .enqueue(object : Callback {
+                override fun onResponse(call: Call, response: Response) {
+                    val body = response.body?.string() ?: throw RuntimeException("body is null")
+                    try {
+                        callback.onSuccess(gson.fromJson(body, typeToken))
+                    } catch (e: Exception) {
+                        callback.onError(e)
+                    }
+                }
+
+                override fun onFailure(call: Call, e: IOException) {
+                    callback.onError(e)
+                }
+            })
     }
 
     override fun saveAsync(post: Post, callback: PostRepository.RepositoryCallback<Post>) {
