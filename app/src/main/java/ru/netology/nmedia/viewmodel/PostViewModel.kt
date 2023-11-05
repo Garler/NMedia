@@ -132,8 +132,8 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
 
     fun removeById(id: Long) {
         val old = data.value?.posts
-        repository.removeByIdAsync(id, object : PostRepository.RepositoryCallback<List<Post>> {
-            override fun onSuccess(result: List<Post>) {
+        repository.removeByIdAsync(id, object : PostRepository.RepositoryCallback<Unit> {
+            override fun onSuccess(result: Unit) {
                 if (old != null) {
                     _data.postValue(FeedModelState(posts = old.filter { it.id != id }))
                 }
