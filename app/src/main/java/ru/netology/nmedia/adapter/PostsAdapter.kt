@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import ru.netology.nmedia.R
 import ru.netology.nmedia.databinding.CardPostBinding
 import ru.netology.nmedia.dto.Post
+import ru.netology.nmedia.util.load
 import kotlin.math.floor
 
 interface OnInteractionListener {
@@ -38,9 +39,11 @@ class PostViewHolder(
     private val binding: CardPostBinding,
     private val onInteractionListener: OnInteractionListener
 ) : RecyclerView.ViewHolder(binding.root) {
+    private val url = "http://10.0.2.2:9999"
     fun bind(post: Post) {
         binding.apply {
             author.text = post.author
+            avatar.load("$url/avatars/${post.authorAvatar}")
             published.text = post.published
             content.text = post.content
             icLikes.text = numberFormat(post.likes)
