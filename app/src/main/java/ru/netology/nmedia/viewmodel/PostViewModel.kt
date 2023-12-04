@@ -1,6 +1,7 @@
 package ru.netology.nmedia.viewmodel
 
 import android.app.Application
+import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -36,6 +37,10 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
 
     init {
         loadPosts()
+    }
+
+    fun errorMsg(error: String) {
+        Toast.makeText(getApplication(), "Что-то пошло не так...", Toast.LENGTH_SHORT).show()
     }
 
     fun loadPosts() {
@@ -85,6 +90,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
 
                         override fun onError(e: Exception) {
                             _data.postValue(FeedModelState(error = true))
+                            errorMsg(e.toString())
                         }
                     })
                 _postCreated.postValue(Unit)
@@ -115,6 +121,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
 
             override fun onError(e: Exception) {
                 _data.postValue(FeedModelState(error = true))
+                errorMsg(e.toString())
             }
         })
     }
@@ -141,6 +148,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
 
             override fun onError(e: Exception) {
                 _data.postValue(FeedModelState(error = true))
+                errorMsg(e.toString())
             }
         })
     }
