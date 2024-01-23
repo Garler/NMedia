@@ -7,7 +7,8 @@ data class Post(
     val published: String,
     val likedByMe: Boolean,
     val likes: Int,
-    val authorAvatar: String?
+    val authorAvatar: String?,
+    val show: Boolean
 //    val reposts: Int,
 //    val views: Int,
 //    val video: String

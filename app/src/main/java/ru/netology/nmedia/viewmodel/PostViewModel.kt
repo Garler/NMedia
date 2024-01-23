@@ -1,12 +1,15 @@
 package ru.netology.nmedia.viewmodel
 
 import android.app.Application
-import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.map
+import androidx.lifecycle.asLiveData
+import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import ru.netology.nmedia.db.AppDb
 import ru.netology.nmedia.dto.Post
@@ -23,7 +26,8 @@ private val empty = Post(
     likedByMe = false,
     published = "",
     likes = 0,
-    authorAvatar = null
+    authorAvatar = null,
+    show = true
 //    reposts = 0,
 //    views = 0,
 //    video = ""
@@ -31,7 +35,16 @@ private val empty = Post(
 
 class PostViewModel(application: Application) : AndroidViewModel(application) {
     private val repository: PostRepository = PostRepositoryImpl(AppDb.getInstance(context = application).postDao())
-    val data: LiveData<FeedModel> = repository.data.map(::FeedModel)
+    val data: LiveData<FeedModel> = repository.data
+        .map(::FeedModel)
+        .catch { it.printStackTrace() }
+        .asLiveData(Dispatchers.Default)
+
+    val newerCount = data.switchMap {
+        repository.getNewer(it.posts.firstOrNull()?.id ?: 0L)
+            .asLiveData(Dispatchers.Default, 100)
+    }
+
     private val _dataState = MutableLiveData<FeedModelState>()
     val dataState: LiveData<FeedModelState>
         get() = _dataState
@@ -46,9 +59,9 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
         loadPosts()
     }
 
-    fun errorMsg(error: String) {
-        Toast.makeText(getApplication(), "Что-то пошло не так...", Toast.LENGTH_SHORT).show()
-    }
+//    fun errorMsg(error: String) {
+//        Toast.makeText(getApplication(), "Что-то пошло не так...", Toast.LENGTH_SHORT).show()
+//    }
 
     fun loadPosts() = viewModelScope.launch {
         try {
@@ -103,7 +116,16 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
             _dataState.value = FeedModelState(error = true)
         }
     }
+
+    fun updateShow() = viewModelScope.launch {
+        repository.updateShow()
+    }
+
 //    fun clearEdit() {
 //        edited.value = empty
 //    }
 }
+
+
+
+

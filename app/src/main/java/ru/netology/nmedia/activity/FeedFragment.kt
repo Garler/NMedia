@@ -103,9 +103,23 @@ class FeedFragment : Fragment() {
             binding.emptyText.isVisible = state.empty
         }
 
+        viewModel.newerCount.observe(viewLifecycleOwner){
+            if (it > 0) {
+                binding.recentPosts.isVisible = true
+            }
+        }
+
+        binding.recentPosts.setOnClickListener {
+            viewModel.updateShow()
+            it.isVisible = false
+            binding.list.smoothScrollToPosition(0)
+        }
+
         binding.swipeRefresh.setOnRefreshListener {
             viewModel.loadPosts()
+            viewModel.updateShow()
             binding.swipeRefresh.isRefreshing = false
+            binding.recentPosts.isVisible = false
         }
 
         binding.retryButton.setOnClickListener {
