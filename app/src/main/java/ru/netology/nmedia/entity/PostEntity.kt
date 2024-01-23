@@ -14,7 +14,7 @@ data class PostEntity(
     val likedByMe: Boolean,
     val likes: Int,
     val authorAvatar: String?,
-    val show: Boolean?
+    val show: Boolean
 //    val reposts: Int,
 //    val views: Int,
 //    val video: String

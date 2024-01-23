@@ -23,7 +23,7 @@ class PostRepositoryImpl(private val dao: PostDao) : PostRepository {
     override val data = dao.getAll()
         .map(List<PostEntity>::toDto)
 //        .flowOn(Dispatchers.Default)
-    override suspend fun getAll() {
+    override suspend fun getAll(show: Boolean) {
         try {
             val response = PostsApi.retrofitService.getAll()
             if (!response.isSuccessful) {
@@ -48,7 +48,7 @@ class PostRepositoryImpl(private val dao: PostDao) : PostRepository {
             }
 
             val body = response.body() ?: throw ApiError(response.code(), response.message())
-            dao.insert(body.toEntity())
+            dao.insert(body.map { it.copy(show = true) }.toEntity())
             emit(body.size)
         }
     }
