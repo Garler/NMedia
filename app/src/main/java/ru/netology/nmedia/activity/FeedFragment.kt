@@ -58,7 +58,7 @@ class FeedFragment : Fragment() {
                 )
             }
 
-            override fun onVideo(post: Post) {
+//            override fun onVideo(post: Post) {
 //                val webpage: Uri = Uri.parse(post.video)
 //                val intent = Intent(Intent.ACTION_VIEW, webpage)
 //                if (context?.let { intent.resolveActivity(it.packageManager) } != null) {
@@ -71,12 +71,19 @@ class FeedFragment : Fragment() {
 //                    ).show()
 //                    return
 //                }
-            }
+//            }
 
             override fun onCardPost(post: Post) {
                 findNavController().navigate(
                     R.id.action_feedFragment_to_postFragment,
                     Bundle().also { it.idArg = post.id }
+                )
+            }
+
+            override fun onMedia(post: String) {
+                findNavController().navigate(
+                    R.id.action_feedFragment_to_mediaFragment,
+                    Bundle().also { it.text = post }
                 )
             }
         })

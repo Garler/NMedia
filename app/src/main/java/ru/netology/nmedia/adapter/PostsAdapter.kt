@@ -1,15 +1,19 @@
 package ru.netology.nmedia.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.Gson
+import ru.netology.nmedia.BuildConfig.BASE_URL
 import ru.netology.nmedia.R
 import ru.netology.nmedia.databinding.CardPostBinding
 import ru.netology.nmedia.dto.Post
 import ru.netology.nmedia.util.load
+import ru.netology.nmedia.util.loadAvatar
 import kotlin.math.floor
 
 interface OnInteractionListener {
@@ -17,7 +21,7 @@ interface OnInteractionListener {
     fun onShare(post: Post)
     fun onRemove(post: Post)
     fun onEdit(post: Post)
-    fun onVideo(post: Post)
+    fun onMedia(post: String)
     fun onCardPost(post: Post)
 }
 
@@ -39,13 +43,19 @@ class PostViewHolder(
     private val binding: CardPostBinding,
     private val onInteractionListener: OnInteractionListener
 ) : RecyclerView.ViewHolder(binding.root) {
-    private val url = "http://10.0.2.2:9999"
+    private val gson = Gson()
     fun bind(post: Post) {
         binding.apply {
             author.text = post.author
-            avatar.load("$url/avatars/${post.authorAvatar}")
+            avatar.loadAvatar("${BASE_URL}/avatars/${post.authorAvatar}")
             published.text = post.published
             content.text = post.content
+            image.let {
+                if (post.attachment != null) {
+                    it.visibility = View.VISIBLE
+                    it.load("${BASE_URL}/media/${post.attachment.url}")
+                } else it.visibility = View.GONE
+            }
             icLikes.text = numberFormat(post.likes)
             icLikes.isChecked = post.likedByMe
 //            icReposts.text = numberFormat(post.reposts)
@@ -56,9 +66,9 @@ class PostViewHolder(
             icReposts.setOnClickListener {
                 onInteractionListener.onShare(post)
             }
-//            playButton.visibility = if (post.video.isNotEmpty()) View.VISIBLE else View.GONE
-            playButton.setOnClickListener {
-                onInteractionListener.onVideo(post)
+            binding.image.setOnClickListener {
+                post.attachment ?: return@setOnClickListener
+                onInteractionListener.onMedia(gson.toJson(post))
             }
             binding.cardPost.setOnClickListener {
                 onInteractionListener.onCardPost(post)

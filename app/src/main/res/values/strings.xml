@@ -26,4 +26,9 @@
     <string name="retry_loading">Retry</string>
     <string name="empty_posts">There are no posts.\nIf you create a new post, it will appear here</string>
     <string name="recent_posts">Recent posts</string>
+    <string name="description_photo">Photo</string>
+    <string name="description_select_photo">Select photo</string>
+    <string name="description_take_photo">Take photo</string>
+    <string name="preview">Preview</string>
+    <string name="play_image">Image</string>
 </resources>

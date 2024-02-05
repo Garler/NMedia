@@ -20,7 +20,7 @@ class PostFragment : Fragment() {
     ): View {
         val binding = FragmentPostBinding.inflate(inflater, container, false)
 //        val postId = arguments?.idArg
-
+//
 //        viewModel.data.observe(viewLifecycleOwner) { posts ->
 //            val post = posts.firstOrNull { it.id == postId } ?: return@observe
 //            val viewHolder = PostViewHolder(binding.singlePost, object : OnInteractionListener {

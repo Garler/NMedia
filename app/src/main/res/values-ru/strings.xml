@@ -27,4 +27,9 @@
     <string name="retry_loading">Повторить</string>
     <string name="empty_posts">Постов нет.\nЕсли создадите новый пост, то он появится здесь</string>
     <string name="recent_posts">Свежие записи</string>
+    <string name="description_photo">Фото</string>
+    <string name="description_select_photo">Выбрать из галереи</string>
+    <string name="description_take_photo">Сделать снимок</string>
+    <string name="preview">Предварительный просмотр</string>
+    <string name="play_image">Изображение</string>
 </resources>
