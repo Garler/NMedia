@@ -32,4 +32,11 @@
     <string name="description_take_photo">Сделать снимок</string>
     <string name="preview">Предварительный просмотр</string>
     <string name="play_image">Изображение</string>
+    <string name="sign_in">Войти</string>
+    <string name="sign_up">Зарегистрироваться</string>
+    <string name="sign_out">Выйти</string>
+    <string name="enter">Войти</string>
+    <string name="password">Пароль</string>
+    <string name="login">Логин</string>
+    <string name="all_fields_must_be_filled_in">Все поля должны быть заполнены!</string>
 </resources>

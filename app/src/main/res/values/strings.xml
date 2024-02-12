@@ -31,4 +31,11 @@
     <string name="description_take_photo">Take photo</string>
     <string name="preview">Preview</string>
     <string name="play_image">Image</string>
+    <string name="sign_in">Sign In</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="sign_out">Sign Out</string>
+    <string name="enter">Enter</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="all_fields_must_be_filled_in">All fields must be filled in!</string>
 </resources>
