@@ -2,6 +2,7 @@ package ru.netology.nmedia.dto
 
 data class Post(
     val id: Long,
+    val authorId: Long,
     val author: String,
     val content: String,
     val published: String,
@@ -9,7 +10,8 @@ data class Post(
     val likes: Int,
     val authorAvatar: String?,
     val show: Boolean,
-    val attachment: Attachment? = null
+    val attachment: Attachment? = null,
+    val ownedByMe: Boolean = false
 //    val reposts: Int,
 //    val views: Int,
 //    val video: String
