@@ -6,12 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.google.gson.Gson
+import dagger.hilt.android.AndroidEntryPoint
 import ru.netology.nmedia.BuildConfig.BASE_URL
 import ru.netology.nmedia.activity.EditPostFragment.Companion.text
 import ru.netology.nmedia.databinding.FragmentMediaBinding
 import ru.netology.nmedia.dto.Post
 import ru.netology.nmedia.util.load
 
+@AndroidEntryPoint
 class MediaFragment: Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
