@@ -124,6 +124,7 @@ class AppAuth @Inject constructor(
                 }
                 return
             }
+            _authStateFlow.value = response.body() ?: return
         } catch (e: IOException) {
             throw NetworkError
         } catch (e: Exception) {
