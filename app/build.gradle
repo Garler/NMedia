@@ -73,6 +73,7 @@ dependencies {
     implementation 'com.github.dhaval2404:imagepicker:2.1'
     implementation 'com.google.dagger:hilt-android:2.50'
     ksp 'com.google.dagger:hilt-compiler:2.50'
+    implementation 'androidx.paging:paging-runtime-ktx:3.2.1'
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
