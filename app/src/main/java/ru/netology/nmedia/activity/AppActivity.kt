@@ -12,9 +12,6 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuProvider
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.NavHostFragment
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
@@ -22,7 +19,6 @@ import com.google.android.material.snackbar.BaseTransientBottomBar.LENGTH_INDEFI
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 import ru.netology.nmedia.R
 import ru.netology.nmedia.activity.NewPostFragment.Companion.text
 import ru.netology.nmedia.auth.AppAuth
@@ -34,8 +30,10 @@ import javax.inject.Inject
 class AppActivity : AppCompatActivity() {
     @Inject
     lateinit var appAuth: AppAuth
+
     @Inject
     lateinit var firebaseMessaging: FirebaseMessaging
+
     @Inject
     lateinit var googleApiAvailability: GoogleApiAvailability
 
@@ -72,12 +70,9 @@ class AppActivity : AppCompatActivity() {
             )
         }
 
-        lifecycleScope.launch {
-            lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
-                viewModel.data.collect {
-                    invalidateOptionsMenu()
-                }
-            }
+
+        viewModel.data.observe(this) {
+            invalidateOptionsMenu()
         }
 
         addMenuProvider(object : MenuProvider {

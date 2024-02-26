@@ -25,7 +25,7 @@ class AuthenticationFragment : Fragment() {
         val authenticationViewModel: AuthViewModel by viewModels()
 
         lifecycleScope.launch {
-            authenticationViewModel.data.collect { state ->
+            authenticationViewModel.data.observe(viewLifecycleOwner) { state ->
                 val token = state.token.toString()
                 if (state.id != 0L && token.isNotEmpty()) {
                     findNavController().navigateUp()

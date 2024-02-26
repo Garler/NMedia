@@ -109,12 +109,6 @@ class FeedFragment : Fragment() {
         }
 
         lifecycleScope.launchWhenCreated {
-            authViewModel.data.collectLatest {
-                viewModel.loadPosts()
-            }
-        }
-
-        lifecycleScope.launchWhenCreated {
             viewModel.data.collectLatest {
                 adapter.submitData(it)
             }
@@ -132,6 +126,10 @@ class FeedFragment : Fragment() {
             viewModel.updateShow()
             it.isVisible = false
             binding.list.smoothScrollToPosition(0)
+        }
+
+        authViewModel.data.observe(viewLifecycleOwner){
+            adapter.refresh()
         }
 
         binding.swipeRefresh.setOnRefreshListener {
