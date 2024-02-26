@@ -1,11 +1,11 @@
 package ru.netology.nmedia.repository
 
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.map
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import retrofit2.Response
@@ -16,7 +16,6 @@ import ru.netology.nmedia.dto.AttachmentType
 import ru.netology.nmedia.dto.Media
 import ru.netology.nmedia.dto.Post
 import ru.netology.nmedia.entity.PostEntity
-import ru.netology.nmedia.entity.toDto
 import ru.netology.nmedia.entity.toEntity
 import ru.netology.nmedia.error.ApiError
 import ru.netology.nmedia.error.AppError
@@ -31,10 +30,15 @@ import javax.inject.Singleton
 @Singleton
 class PostRepositoryImpl @Inject constructor(private val dao: PostDao, private val postApiService: PostApiService) : PostRepository {
 
-    override val data = dao.getAll()
-        .map(List<PostEntity>::toDto)
+    override val data = Pager(
+        config = PagingConfig(pageSize = 10, enablePlaceholders = false),
+        pagingSourceFactory = {
+            PostPagingSource(
+                postApiService
+            )
+        }
+    ).flow
 
-    //        .flowOn(Dispatchers.Default)
     override suspend fun getAll(show: Boolean) {
         try {
             val response = postApiService.getAll()
@@ -67,12 +71,10 @@ class PostRepositoryImpl @Inject constructor(private val dao: PostDao, private v
         .catch { e -> throw AppError.from(e) }
 //        .flowOn(Dispatchers.Default)
 
-    override suspend fun likeById(id: Long) {
-        val post = data.firstOrNull()?.find { it.id == id }
-        post ?: return
+    override suspend fun likeById(post: Post) {
         try {
             if (post.likedByMe) {
-                dao.unlikeById(id)
+                dao.unlikeById(post.id)
                 val response = postApiService.unLikeById(post.id)
                 if (!response.isSuccessful) {
                     throw ApiError(response.code(), response.message())
@@ -80,7 +82,7 @@ class PostRepositoryImpl @Inject constructor(private val dao: PostDao, private v
                 val body = response.body() ?: throw ApiError(response.code(), response.message())
                 dao.insert(PostEntity.fromDto(body))
             } else {
-                dao.likeById(id)
+                dao.likeById(post.id)
                 val response = postApiService.likeById(post.id)
                 if (!response.isSuccessful) {
                     throw ApiError(response.code(), response.message())
