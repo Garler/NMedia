@@ -86,7 +86,6 @@ class PostViewModel @Inject constructor(private val repository: PostRepository, 
     fun loadPosts() = viewModelScope.launch {
         try {
             _dataState.value = FeedModelState(loading = true)
-            repository.getAll()
             _dataState.value = FeedModelState()
         } catch (e: Exception) {
             _dataState.value = FeedModelState(error = true)
