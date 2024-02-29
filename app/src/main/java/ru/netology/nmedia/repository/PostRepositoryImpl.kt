@@ -1,16 +1,21 @@
 package ru.netology.nmedia.repository
 
+import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
+import androidx.paging.map
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import retrofit2.Response
 import ru.netology.nmedia.api.PostApiService
 import ru.netology.nmedia.dao.PostDao
+import ru.netology.nmedia.dao.PostRemoteKeyDao
+import ru.netology.nmedia.db.AppDb
 import ru.netology.nmedia.dto.Attachment
 import ru.netology.nmedia.dto.AttachmentType
 import ru.netology.nmedia.dto.Media
@@ -28,16 +33,25 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class PostRepositoryImpl @Inject constructor(private val dao: PostDao, private val postApiService: PostApiService) : PostRepository {
+class PostRepositoryImpl @Inject constructor(
+    private val dao: PostDao,
+    private val postApiService: PostApiService,
+    postRemoteKeyDao: PostRemoteKeyDao,
+    override val appDb: AppDb
+) : PostRepository {
 
+    @OptIn(ExperimentalPagingApi::class)
     override val data = Pager(
         config = PagingConfig(pageSize = 10, enablePlaceholders = false),
-        pagingSourceFactory = {
-            PostPagingSource(
-                postApiService
-            )
-        }
+        pagingSourceFactory = { dao.getPagingSource() },
+        remoteMediator = PostRemoteMediator(
+            service = postApiService,
+            postDao = dao,
+            postRemoteKeyDao = postRemoteKeyDao,
+            db = appDb
+        )
     ).flow
+        .map { it.map(PostEntity::toDto) }
 
     override suspend fun getAll(show: Boolean) {
         try {
@@ -110,8 +124,18 @@ class PostRepositoryImpl @Inject constructor(private val dao: PostDao, private v
                 throw ApiError(mediaResponse.code(), mediaResponse.message())
             }
 
-            val media = mediaResponse.body() ?: throw ApiError(mediaResponse.code(), mediaResponse.message())
-            val response = postApiService.save(post.copy(attachment = Attachment(media.id, AttachmentType.IMAGE)))
+            val media = mediaResponse.body() ?: throw ApiError(
+                mediaResponse.code(),
+                mediaResponse.message()
+            )
+            val response = postApiService.save(
+                post.copy(
+                    attachment = Attachment(
+                        media.id,
+                        AttachmentType.IMAGE
+                    )
+                )
+            )
             if (!response.isSuccessful) {
                 throw ApiError(response.code(), response.message())
             }
