@@ -38,4 +38,5 @@
     <string name="password">Password</string>
     <string name="login">Login</string>
     <string name="all_fields_must_be_filled_in">All fields must be filled in!</string>
+    <string name="ad_description">Ad</string>
 </resources>

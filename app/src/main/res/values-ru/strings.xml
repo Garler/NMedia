@@ -39,4 +39,5 @@
     <string name="password">Пароль</string>
     <string name="login">Логин</string>
     <string name="all_fields_must_be_filled_in">Все поля должны быть заполнены!</string>
+    <string name="ad_description">Реклама</string>
 </resources>
