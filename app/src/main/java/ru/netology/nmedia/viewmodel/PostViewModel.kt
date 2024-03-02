@@ -6,16 +6,16 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import androidx.paging.map
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import ru.netology.nmedia.auth.AppAuth
+import ru.netology.nmedia.dto.FeedItem
 import ru.netology.nmedia.dto.Post
 import ru.netology.nmedia.model.FeedModelState
 import ru.netology.nmedia.model.PhotoModel
@@ -40,17 +40,21 @@ private val empty = Post(
 )
 
 @HiltViewModel
-class PostViewModel @Inject constructor(private val repository: PostRepository, appAuth: AppAuth) : ViewModel() {
+class PostViewModel @Inject constructor(private val repository: PostRepository, appAuth: AppAuth) :
+    ViewModel() {
+        private val cached = repository.data.cachedIn(viewModelScope)
     @OptIn(ExperimentalCoroutinesApi::class)
-    val data: Flow<PagingData<Post>> = appAuth
+    val data: Flow<PagingData<FeedItem>> = appAuth
         .authStateFlow
-        .flatMapLatest {
-            auth ->
-            repository.data.map {posts ->
-                posts.map { it.copy(ownedByMe = auth.id == it.authorId) }
+        .flatMapLatest { (myId, _) ->
+            cached.map { pagingData ->
+                pagingData.map { post ->
+                    if (post is Post) {
+                        post.copy(ownedByMe = post.authorId == myId)
+                    } else post
+                }
             }
         }
-        .flowOn(Dispatchers.Default)
 
 //    val newerCount = data.switchMap {
 //        repository.getNewer(it.posts.firstOrNull()?.id ?: 0L)
@@ -75,7 +79,7 @@ class PostViewModel @Inject constructor(private val repository: PostRepository, 
         loadPosts()
     }
 
-    fun setPhoto(uri: Uri, file: File){
+    fun setPhoto(uri: Uri, file: File) {
         _photo.value = PhotoModel(uri, file)
     }
 
@@ -106,8 +110,8 @@ class PostViewModel @Inject constructor(private val repository: PostRepository, 
             viewModelScope.launch {
                 try {
                     val photoModel = _photo.value
-                    if (photoModel == null){
-                    repository.save(it)
+                    if (photoModel == null) {
+                        repository.save(it)
                     } else {
                         repository.saveWithAttachment(it, photoModel)
                     }
@@ -135,8 +139,8 @@ class PostViewModel @Inject constructor(private val repository: PostRepository, 
     }
 
     fun repost(id: Long) {
-                TODO("Not yet implemented")
-            }
+        TODO("Not yet implemented")
+    }
 
     fun removeById(id: Long) = viewModelScope.launch {
         try {
